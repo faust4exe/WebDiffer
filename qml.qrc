@@ -7,5 +7,6 @@
         <file>LoadProgressStyle.qml</file>
         <file>+android/LoadProgressStyle.qml</file>
         <file>images/right-32.png</file>
+        <file>ScanRectVisualizer.qml</file>
     </qresource>
 </RCC>

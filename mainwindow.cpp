@@ -17,12 +17,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    //    ui->quickWidget->engine()->rootContext()->setContextProperty()
+    ui->quickWidget->engine()->rootContext()->setContextProperty("theWindow", this);
     ui->quickWidget->setSource(QUrl(QStringLiteral("qrc:/main.qml")));
 }
 
 MainWindow::~MainWindow()
 {
+    ui->quickWidget->setSource(QUrl());
     delete ui;
 }
 
@@ -30,16 +31,8 @@ int counter = 0;
 QImage originalImage;
 void MainWindow::on_pushButton_clicked()
 {
-    QScreen *screen = QGuiApplication::primaryScreen();
-    WId winId = 0;
-    if (const QWindow *window = windowHandle()) {
-        screen = window->screen();
-        winId = window->winId();
-    }
-    if (!screen)
-        return;
-
-    QPixmap originalPixmap = screen->grabWindow(winId, 30, 150, 720, 530);
+    qDebug() << "Push button clicked";
+    QPixmap originalPixmap = ui->quickWidget->grab(scanRect());
 
     QString fileName = QTime::currentTime().toString();
     fileName.prepend("__");
@@ -63,16 +56,8 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    QScreen *screen = QGuiApplication::primaryScreen();
-    WId winId = 0;
-    if (const QWindow *window = windowHandle()) {
-        screen = window->screen();
-        winId = window->winId();
-    }
-    if (!screen)
-        return;
-
-    QPixmap updatePixmap = screen->grabWindow(winId, 30, 150, 720, 530);
+    qDebug() << "Push button 2 clicked";
+    QPixmap updatePixmap = ui->quickWidget->grab(scanRect());
 
     QString fileName = QTime::currentTime().toString();
     fileName.prepend("__");
@@ -119,10 +104,12 @@ void MainWindow::on_pushButton_2_clicked()
             fileName.prepend("Saved to ");
             fileName.append(" diffCount: " + QString::number(diffCount) );
             ui->label->setText(fileName);
+            qDebug() << "Push button 2 clicked - has changes";
         }
         else {
             fileName.append(" no changes ");
             ui->label->setText(fileName);
+            qDebug() << "Push button 2 clicked - no changes";
         }
     }
     else {
@@ -149,4 +136,17 @@ void MainWindow::loopBeep()
 void MainWindow::on_pushButton_3_clicked()
 {
     loop_beep = false;
+}
+
+QRect MainWindow::scanRect() const
+{
+    return m_scanRect;
+}
+
+void MainWindow::setScanRect(const QRect &newScanRect)
+{
+    if (m_scanRect == newScanRect)
+        return;
+    m_scanRect = newScanRect;
+    emit scanRectChanged();
 }

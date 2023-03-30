@@ -54,6 +54,7 @@ import QtWebView 1.1
 import QtQuick.Layouts 1.1
 
 Item {
+    id: root
     property bool showProgress: webView.loading
                                 && Qt.platform.os !== "ios"
                                 && Qt.platform.os !== "winrt"
@@ -183,6 +184,17 @@ Item {
             if (loadRequest.errorString)
                 console.error(loadRequest.errorString);
         }
+    }
+
+    ScanRectVisualizer {
+        height: theWindow.scanRect.height
+        width: theWindow.scanRect.width
+        x: theWindow.scanRect.x
+        y: theWindow.scanRect.y
+    }
+
+    Component.onCompleted: {
+        theWindow.scanRect = Qt.rect(30,150, 720, 530)
     }
 
     function updatePage() {

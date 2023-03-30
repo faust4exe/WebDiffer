@@ -10,10 +10,17 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+    Q_PROPERTY(QRect scanRect READ scanRect WRITE setScanRect NOTIFY scanRectChanged)
 
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    QRect scanRect() const;
+    void setScanRect(const QRect &newScanRect);
+
+signals:
+    void scanRectChanged();
 
 private slots:
     void on_pushButton_clicked();
@@ -26,5 +33,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QRect m_scanRect;
 };
 #endif // MAINWINDOW_H
