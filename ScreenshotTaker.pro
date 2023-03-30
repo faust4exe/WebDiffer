@@ -1,8 +1,7 @@
-QT       += core gui
+QT += core gui
 QT += qml quick webview
 QT += quickwidgets
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += widgets
 
 CONFIG += c++11
 QT_DEBUG_PLUGINS = 1

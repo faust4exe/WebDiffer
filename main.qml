@@ -49,70 +49,47 @@
 ****************************************************************************/
 
 import QtQuick 2.2
-import QtQuick.Controls 2.15//.151.1
+import QtQuick.Controls 2.15
 import QtWebView 1.1
 import QtQuick.Layouts 1.1
-//import QtQuick.Controls.Styles 1.4//.tyles 1.4//4.2
 
-
-//ApplicationWindow {
 Item {
     property bool showProgress: webView.loading
                                 && Qt.platform.os !== "ios"
                                 && Qt.platform.os !== "winrt"
     visible: true
-//    anchors.fill: parent
-//    x: initialX
-//    y: initialY
-//    width: initialWidth
-//    height: initialHeight
-//    title: webView.title
 
-//    toolBar:
     ToolBar {
         id: navigationBar
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-//        height: 30
+
         RowLayout {
             anchors.fill: parent
             spacing: 0
 
             ToolButton {
                 id: backButton
-//                tooltip: qsTr("Back")
-//                icon:
                 icon.source: "images/left-32.png"
                 onClicked: webView.goBack()
                 enabled: webView.canGoBack
                 Layout.preferredWidth: navigationBar.height
-//                style: ButtonStyle {
-//                    background: Rectangle { color: "transparent" }
-//                }
             }
 
             ToolButton {
                 id: forwardButton
-//                tooltip: qsTr("Forward")
                 icon.source: "images/right-32.png"
                 onClicked: webView.goForward()
                 enabled: webView.canGoForward
                 Layout.preferredWidth: navigationBar.height
-//                style: ButtonStyle {
-//                    background: Rectangle { color: "transparent" }
-//                }
             }
 
             ToolButton {
                 id: reloadButton
-//                tooltip: webView.loading ? qsTr("Stop"): qsTr("Refresh")
                 icon.source: webView.loading ? "images/stop-32.png" : "images/refresh-32.png"
                 onClicked: webView.loading ? webView.stop() : webView.reload()
                 Layout.preferredWidth: navigationBar.height
-//                style: ButtonStyle {
-//                    background: Rectangle { color: "transparent" }
-//                }
             }
 
             ToolButton {
@@ -158,7 +135,6 @@ Item {
 
                 ProgressBar {
                     anchors.centerIn: parent
-//                    style: LoadProgressStyle { }
                     z: Qt.platform.os === "android" ? -1 : 1
                     visible: showProgress
                     from: 0
@@ -178,17 +154,12 @@ Item {
                     Qt.inputMethod.hide()
                     webView.url = urlField.text//utils.fromUserInput(urlField.text)
                 }
-//                style: ButtonStyle {
-//                    background: Rectangle { color: "transparent" }
-//                }
             }
 
             Item { Layout.preferredWidth: 10 }
         }
     }
 
-    //statusBar:
-//    StatusBar
     Item {
         id: statusBar
         visible: showProgress
@@ -207,7 +178,7 @@ Item {
         anchors.fill: parent
         anchors.topMargin: navigationBar.height
         anchors.bottomMargin: statusBar.height
-        url: "https://metro.zakaz.md/ru/"//initialUrl
+        url: "https://metro.zakaz.md/ru/"
         onLoadingChanged: {
             if (loadRequest.errorString)
                 console.error(loadRequest.errorString);
@@ -215,7 +186,6 @@ Item {
     }
 
     function updatePage() {
-//        console.debug("QML updating page call")
         remainAnimation.restart()
         webView.reload()
     }
