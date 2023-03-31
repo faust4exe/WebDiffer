@@ -152,3 +152,8 @@ void MainWindow::setScanRect(const QRect &newScanRect)
     m_scanRect = newScanRect;
     emit scanRectChanged();
 }
+
+QUrl MainWindow::fromUserInput(const QString &text)
+{
+    return QUrl::fromUserInput(text);
+}

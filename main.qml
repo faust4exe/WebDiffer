@@ -132,7 +132,7 @@ Item {
                 inputMethodHints: Qt.ImhUrlCharactersOnly | Qt.ImhPreferLowercase
                 text: webView.url
 
-                onAccepted: webView.url = utils.fromUserInput(text)
+                onAccepted: webView.url = theWindow.fromUserInput(text)
 
                 ProgressBar {
                     anchors.centerIn: parent
@@ -153,7 +153,7 @@ Item {
                 onClicked: {
                     Qt.inputMethod.commit()
                     Qt.inputMethod.hide()
-                    webView.url = urlField.text//utils.fromUserInput(urlField.text)
+                    webView.url = theWindow.fromUserInput(urlField.text)
                 }
             }
 

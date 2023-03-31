@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QUrl>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,6 +19,8 @@ public:
 
     QRect scanRect() const;
     void setScanRect(const QRect &newScanRect);
+
+    Q_INVOKABLE QUrl fromUserInput(const QString &text);
 
 signals:
     void scanRectChanged();
