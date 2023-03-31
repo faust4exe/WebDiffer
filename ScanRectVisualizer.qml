@@ -18,6 +18,24 @@ Rectangle {
     }
 
     Rectangle {
+        anchors.centerIn: parent
+        color: "transparent"
+        border.color: "green"
+        border.width: 1
+        height: width
+        width: 20
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.SizeAllCursor
+            onPositionChanged: {
+                theWindow.scanRect.x += mouse.x
+                theWindow.scanRect.y += mouse.y
+            }
+        }
+    }
+
+    Rectangle {
         anchors.verticalCenter: parent.top
         anchors.horizontalCenter: parent.left
         color: "transparent"

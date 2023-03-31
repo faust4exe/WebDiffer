@@ -29,6 +29,7 @@ MainWindow::~MainWindow()
 
 int counter = 0;
 QImage originalImage;
+QString originalFilename;
 void MainWindow::on_pushButton_clicked()
 {
     qDebug() << "Push button clicked";
@@ -42,6 +43,7 @@ void MainWindow::on_pushButton_clicked()
     fileName.replace(":", "-");
 
     bool ok = originalPixmap.save(fileName, "png");
+    originalFilename = fileName;
     qDebug() << "Saved initial screen to " << fileName
              << " : " << ok;
 
@@ -107,7 +109,7 @@ void MainWindow::on_pushButton_2_clicked()
             qDebug() << "Push button 2 clicked - has changes";
         }
         else {
-            fileName.append(" no changes ");
+            fileName.append(" no changes from " + originalFilename);
             ui->label->setText(fileName);
             qDebug() << "Push button 2 clicked - no changes";
         }
@@ -120,7 +122,7 @@ void MainWindow::on_pushButton_2_clicked()
                               "updatePage");
 
     int secondToUpdate = 60 * 3;
-    QTimer::singleShot(secondToUpdate*1000, this, SLOT(on_pushButton_2_clicked()));
+    QTimer::singleShot(secondToUpdate * 1000, this, SLOT(on_pushButton_2_clicked()));
 }
 
 void MainWindow::loopBeep()
