@@ -9,12 +9,17 @@
 #include <QTime>
 #include <QTimer>
 #include <QDebug>
+#include <QDir>
 
-bool loop_beep = false;
+const QString shotsPath = "shots";
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    QDir dir;
+    dir.mkdir(shotsPath);
+
     ui->setupUi(this);
 
     ui->quickWidget->engine()->rootContext()->setContextProperty("theWindow", this);
@@ -27,46 +32,39 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-int counter = 0;
-QImage originalImage;
-QString originalFilename;
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_takeScreenshot_clicked()
 {
-    qDebug() << "Push button clicked";
     QPixmap originalPixmap = ui->quickWidget->grab(scanRect());
 
-    QString fileName = QTime::currentTime().toString();
-    fileName.prepend("__");
-    fileName.prepend(QString::number(++counter));
-    fileName.prepend("shots/");
-    fileName.append("__initial.png");
-    fileName.replace(":", "-");
+    QString fileName =
+            QString("%1/%2__%3__initial.png")
+            .arg(shotsPath)
+            .arg(QString::number(++counter))
+            .arg(QTime::currentTime().toString("hh-mm-ss"));
 
     bool ok = originalPixmap.save(fileName, "png");
     originalFilename = fileName;
     qDebug() << "Saved initial screen to " << fileName
              << " : " << ok;
 
-    if(ok)fileName.append("  - ok");
+    if(ok) fileName.append("  - ok");
     else fileName.append("  - fail");
 
-    fileName.prepend("Saved to ");
-    ui->label->setText(fileName);
+    ui->label->setText("Saved to " + fileName);
+    ui->compareScreenshot->setEnabled(true);
 
     originalImage = originalPixmap.toImage();
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_compareScreenshot_clicked()
 {
-    qDebug() << "Push button 2 clicked";
     QPixmap updatePixmap = ui->quickWidget->grab(scanRect());
 
-    QString fileName = QTime::currentTime().toString();
-    fileName.prepend("__");
-    fileName.prepend(QString::number(++counter));
-    fileName.prepend("shots/");
-    fileName.append(".png");
-    fileName.replace(":", "-");
+    QString fileName =
+            QString("%1/%2__%3.png")
+            .arg(shotsPath)
+            .arg(QString::number(++counter))
+            .arg(QTime::currentTime().toString("hh-mm-ss"));
 
     // compare with original
     int diffCount = 0;
@@ -90,7 +88,8 @@ void MainWindow::on_pushButton_2_clicked()
         }
 
         if ( diffCount > 15 ) {
-            loop_beep = true;
+            m_loop_beep = true;
+            ui->stopBeeping->setEnabled(true);
             loopBeep();
 
             bool ok = updatePixmap.save(fileName, "png");
@@ -100,44 +99,48 @@ void MainWindow::on_pushButton_2_clicked()
             ok = updateImage.save(fileName.replace(".png","__diff.png"), "png");
             qDebug() << "Diff saved " << ok << "  with differentPixels " << diffCount;
 
-            if(ok)fileName.append("  - ok");
+            if(ok) fileName.append("  - ok");
             else fileName.append("  - fail");
 
-            fileName.prepend("Saved to ");
             fileName.append(" diffCount: " + QString::number(diffCount) );
-            ui->label->setText(fileName);
-            qDebug() << "Push button 2 clicked - has changes";
+            ui->label->setText("Saved to " + fileName);
         }
         else {
-            fileName.append(" no changes from " + originalFilename);
-            ui->label->setText(fileName);
-            qDebug() << "Push button 2 clicked - no changes";
+            ui->label->setText(fileName + " no changes from " + originalFilename);
         }
     }
     else {
-        qDebug() << "Pixmap is are different in size";
+        ui->label->setText("Pixmap is are different in size");
     }
 
     QMetaObject::invokeMethod(ui->quickWidget->rootObject(),
                               "updatePage");
 
-    int secondToUpdate = 60 * 3;
-    QTimer::singleShot(secondToUpdate * 1000, this, SLOT(on_pushButton_2_clicked()));
+    QTimer::singleShot(ui->secsToUpdate->value() * 1000,
+                       this, SLOT(on_compareScreenshot_clicked()));
 }
 
 void MainWindow::loopBeep()
 {
+    if ( m_loop_beep == false ) {
+        return;
+    }
+
     QApplication::beep();
 
-    if ( loop_beep ) {
-        int secondToUpdate = 5;
-        QTimer::singleShot(secondToUpdate*1000, this, SLOT(loopBeep()));
-    }
+    const int secondToUpdate = 5;
+    QTimer::singleShot(secondToUpdate * 1000, this, SLOT(loopBeep()));
 }
 
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::on_stopBeeping_clicked()
 {
-    loop_beep = false;
+    m_loop_beep = false;
+    ui->stopBeeping->setEnabled(false);
+}
+
+void MainWindow::on_secsToUpdate_valueChanged()
+{
+    setUpdateInterval(ui->secsToUpdate->value());
 }
 
 QRect MainWindow::scanRect() const
@@ -149,6 +152,7 @@ void MainWindow::setScanRect(const QRect &newScanRect)
 {
     if (m_scanRect == newScanRect)
         return;
+
     m_scanRect = newScanRect;
     emit scanRectChanged();
 }
@@ -156,4 +160,18 @@ void MainWindow::setScanRect(const QRect &newScanRect)
 QUrl MainWindow::fromUserInput(const QString &text)
 {
     return QUrl::fromUserInput(text);
+}
+
+int MainWindow::updateInterval() const
+{
+    return m_updateInterval;
+}
+
+void MainWindow::setUpdateInterval(int newUpdateInterval)
+{
+    if (m_updateInterval == newUpdateInterval)
+        return;
+
+    m_updateInterval = newUpdateInterval;
+    emit updateIntervalChanged();
 }

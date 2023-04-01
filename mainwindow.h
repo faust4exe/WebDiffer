@@ -12,6 +12,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     Q_PROPERTY(QRect scanRect READ scanRect WRITE setScanRect NOTIFY scanRectChanged)
+    Q_PROPERTY(int updateInterval READ updateInterval WRITE setUpdateInterval NOTIFY updateIntervalChanged)
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -22,20 +23,29 @@ public:
 
     Q_INVOKABLE QUrl fromUserInput(const QString &text);
 
+    int updateInterval() const;
+    void setUpdateInterval(int newUpdateInterval);
+
 signals:
     void scanRectChanged();
 
-private slots:
-    void on_pushButton_clicked();
+    void updateIntervalChanged();
 
-    void on_pushButton_2_clicked();
+private slots:
+    void on_takeScreenshot_clicked();
+    void on_compareScreenshot_clicked();
+    void on_stopBeeping_clicked();
+    void on_secsToUpdate_valueChanged();
 
     void loopBeep();
-
-    void on_pushButton_3_clicked();
 
 private:
     Ui::MainWindow *ui;
     QRect m_scanRect;
+    bool m_loop_beep = false;
+    int counter = 0;
+    QImage originalImage;
+    QString originalFilename;
+    int m_updateInterval = 300;
 };
 #endif // MAINWINDOW_H

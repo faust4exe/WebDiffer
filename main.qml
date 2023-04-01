@@ -95,30 +95,20 @@ Item {
 
             ToolButton {
                 id: refresheeButton
-                text: "Updating in " + remainTime
-//                text: checked ? "Updating in " + remainTime : "Start Update"
+
+                text: checked ? "Updating in " + remainTime : "Start Update"
                 checkable: true
 
                 property int remainTime: 0
-                property int updateInt: 60 * 3
+                property int updateInt: theWindow.updateInterval
+
                 NumberAnimation {
                     id: remainAnimation
                     target: refresheeButton
                     property: "remainTime"
-                    from: timer.interval / 1000
+                    duration: refresheeButton.updateInt * 1000
+                    from: refresheeButton.updateInt
                     to: 0
-                    duration: timer.interval
-                }
-
-                Timer {
-                    id: timer
-                    interval: refresheeButton.updateInt * 1000
-                    repeat: true
-                    running: parent.checked
-                    onTriggered: {
-//                        remainAnimation.restart()
-//                        webView.reload()
-                    }
                 }
 
                 onClicked: remainAnimation.start()
@@ -198,6 +188,7 @@ Item {
     }
 
     function updatePage() {
+        refresheeButton.checked = true
         remainAnimation.restart()
         webView.reload()
     }
