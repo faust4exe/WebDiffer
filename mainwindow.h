@@ -13,6 +13,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     Q_PROPERTY(QRect scanRect READ scanRect WRITE setScanRect NOTIFY scanRectChanged)
     Q_PROPERTY(int updateInterval READ updateInterval WRITE setUpdateInterval NOTIFY updateIntervalChanged)
+    Q_PROPERTY(QUrl diffFilename READ diffFilename WRITE setDiffFilename NOTIFY diffFilenameChanged)
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -26,10 +27,15 @@ public:
     int updateInterval() const;
     void setUpdateInterval(int newUpdateInterval);
 
+    QUrl diffFilename() const;
+    void setDiffFilename(const QUrl &newDiffFilename);
+
 signals:
     void scanRectChanged();
 
     void updateIntervalChanged();
+
+    void diffFilenameChanged();
 
 private slots:
     void on_takeScreenshot_clicked();
@@ -47,5 +53,6 @@ private:
     QImage originalImage;
     QString originalFilename;
     int m_updateInterval = 300;
+    QUrl m_diffFilename;
 };
 #endif // MAINWINDOW_H

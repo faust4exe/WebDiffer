@@ -181,6 +181,25 @@ Item {
         width: theWindow.scanRect.width
         x: theWindow.scanRect.x
         y: theWindow.scanRect.y
+
+        Image {
+            id: diffImage
+            anchors.fill: parent
+            source: theWindow.diffFilename
+
+            SequentialAnimation {
+                loops: Animation.Infinite
+                running: diffImage.source != ""
+
+                PauseAnimation {
+                    duration: 2000
+                }
+
+                ScriptAction {
+                    script: diffImage.visible = !diffImage.visible
+                }
+            }
+        }
     }
 
     Component.onCompleted: {

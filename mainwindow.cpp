@@ -58,6 +58,8 @@ void MainWindow::on_takeScreenshot_clicked()
 
 void MainWindow::on_compareScreenshot_clicked()
 {
+    on_stopBeeping_clicked();
+
     QPixmap updatePixmap = ui->quickWidget->grab(scanRect());
 
     QString fileName =
@@ -78,7 +80,7 @@ void MainWindow::on_compareScreenshot_clicked()
 
                 QRgb originalPixel = originalImage.pixel(x,y);
                 QRgb newPixel = updateImage.pixel(x,y);
-                QRgb diffPixel = newPixel - originalPixel;
+                QRgb diffPixel = originalPixel - newPixel;
                 updateImage.setPixel(x,y, diffPixel);
 
                 if(qRed(diffPixel) || qGreen(diffPixel) || qBlue(diffPixel)){
@@ -97,6 +99,7 @@ void MainWindow::on_compareScreenshot_clicked()
                      << " : " << ok;
 
             ok = updateImage.save(fileName.replace(".png","__diff.png"), "png");
+            setDiffFilename(QUrl::fromLocalFile(fileName));
             qDebug() << "Diff saved " << ok << "  with differentPixels " << diffCount;
 
             if(ok) fileName.append("  - ok");
@@ -136,6 +139,7 @@ void MainWindow::on_stopBeeping_clicked()
 {
     m_loop_beep = false;
     ui->stopBeeping->setEnabled(false);
+    setDiffFilename(QUrl());
 }
 
 void MainWindow::on_secsToUpdate_valueChanged()
@@ -174,4 +178,18 @@ void MainWindow::setUpdateInterval(int newUpdateInterval)
 
     m_updateInterval = newUpdateInterval;
     emit updateIntervalChanged();
+}
+
+QUrl MainWindow::diffFilename() const
+{
+    return m_diffFilename;
+}
+
+void MainWindow::setDiffFilename(const QUrl &newDiffFilename)
+{
+    if (m_diffFilename == newDiffFilename)
+        return;
+
+    m_diffFilename = newDiffFilename;
+    emit diffFilenameChanged();
 }
