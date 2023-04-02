@@ -170,7 +170,7 @@ Item {
         anchors.topMargin: navigationBar.height
         anchors.bottomMargin: statusBar.height
         url: "https://metro.zakaz.md/ru/"
-        onLoadingChanged: {
+        onLoadingChanged: function(loadRequest) {
             if (loadRequest.errorString)
                 console.error(loadRequest.errorString);
         }
