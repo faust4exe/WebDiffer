@@ -8,7 +8,7 @@ Rectangle {
 
     ScanRectHandle {
         anchors.centerIn: parent
-        cursorShape: Qt.SizeAllCursor
+        source: "images/move.svg"
         onPositionChanged: function(mouse) {
             theWindow.scanRect.x += mouse.x
             theWindow.scanRect.y += mouse.y
@@ -18,7 +18,7 @@ Rectangle {
     ScanRectHandle {
         anchors.verticalCenter: parent.top
         anchors.horizontalCenter: parent.left
-        cursorShape: Qt.SizeFDiagCursor
+        source: "images/resizeF.svg"
         onPositionChanged: function(mouse) {
             theWindow.scanRect.x += mouse.x
             theWindow.scanRect.width -= mouse.x
@@ -30,7 +30,7 @@ Rectangle {
     ScanRectHandle {
         anchors.verticalCenter: parent.top
         anchors.horizontalCenter: parent.right
-        cursorShape: Qt.SizeBDiagCursor
+        source: "images/resizeB.svg"
         onPositionChanged: function(mouse) {
             theWindow.scanRect.width += mouse.x
             theWindow.scanRect.y += mouse.y
@@ -41,7 +41,7 @@ Rectangle {
     ScanRectHandle {
         anchors.verticalCenter: parent.bottom
         anchors.horizontalCenter: parent.left
-        cursorShape: Qt.SizeBDiagCursor
+        source: "images/resizeB.svg"
         onPositionChanged: function(mouse) {
             theWindow.scanRect.x += mouse.x
             theWindow.scanRect.width -= mouse.x
@@ -52,7 +52,7 @@ Rectangle {
     ScanRectHandle {
         anchors.verticalCenter: parent.bottom
         anchors.horizontalCenter: parent.right
-        cursorShape: Qt.SizeFDiagCursor
+        source: "images/resizeF.svg"
         onPositionChanged: function(mouse) {
             theWindow.scanRect.width += mouse.x
             theWindow.scanRect.height += mouse.y

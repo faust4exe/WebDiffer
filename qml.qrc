@@ -9,5 +9,8 @@
         <file>images/right-32.png</file>
         <file>ScanRectVisualizer.qml</file>
         <file>ScanRectHandle.qml</file>
+        <file>images/move.svg</file>
+        <file>images/resizeF.svg</file>
+        <file>images/resizeB.svg</file>
     </qresource>
 </RCC>
