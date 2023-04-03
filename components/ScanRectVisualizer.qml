@@ -16,7 +16,7 @@ Rectangle {
 
     ScanRectHandle {
         anchors.centerIn: parent
-        source: "images/move.svg"
+        source: "qrc:/images/move.svg"
         onPositionChanged: function(mouse) {
             theWindow.scanRect.x += mouse.x
             theWindow.scanRect.y += mouse.y
@@ -26,7 +26,7 @@ Rectangle {
     ScanRectHandle {
         anchors.verticalCenter: parent.top
         anchors.horizontalCenter: parent.left
-        source: "images/resizeF.svg"
+        source: "qrc:/images/resizeF.svg"
         onPositionChanged: function(mouse) {
             theWindow.scanRect.x += mouse.x
             theWindow.scanRect.width -= mouse.x
@@ -38,7 +38,7 @@ Rectangle {
     ScanRectHandle {
         anchors.verticalCenter: parent.top
         anchors.horizontalCenter: parent.right
-        source: "images/resizeB.svg"
+        source: "qrc:/images/resizeB.svg"
         onPositionChanged: function(mouse) {
             theWindow.scanRect.width += mouse.x
             theWindow.scanRect.y += mouse.y
@@ -49,7 +49,7 @@ Rectangle {
     ScanRectHandle {
         anchors.verticalCenter: parent.bottom
         anchors.horizontalCenter: parent.left
-        source: "images/resizeB.svg"
+        source: "qrc:/images/resizeB.svg"
         onPositionChanged: function(mouse) {
             theWindow.scanRect.x += mouse.x
             theWindow.scanRect.width -= mouse.x
@@ -60,7 +60,7 @@ Rectangle {
     ScanRectHandle {
         anchors.verticalCenter: parent.bottom
         anchors.horizontalCenter: parent.right
-        source: "images/resizeF.svg"
+        source: "qrc:/images/resizeF.svg"
         onPositionChanged: function(mouse) {
             theWindow.scanRect.width += mouse.x
             theWindow.scanRect.height += mouse.y

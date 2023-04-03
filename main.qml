@@ -53,6 +53,8 @@ import QtQuick.Controls 2.15
 import QtWebView 1.1
 import QtQuick.Layouts 1.1
 
+import "./components"
+
 Item {
     id: root
     property bool showProgress: webView.loading
@@ -125,7 +127,7 @@ Item {
                 onAccepted: webView.url = theWindow.fromUserInput(text)
 
                 ProgressBar {
-                    anchors.centerIn: parent
+                    anchors.fill: parent
                     z: Qt.platform.os === "android" ? -1 : 1
                     visible: showProgress
                     from: 0
