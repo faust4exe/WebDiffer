@@ -1,4 +1,5 @@
 import QtQuick 2.2
+import Qt5Compat.GraphicalEffects
 
 Image {
     id: root
@@ -17,5 +18,12 @@ Image {
         onPositionChanged: function(mouse) {
             root.positionChanged(mouse)
         }
+    }
+
+    layer.enabled: true
+    layer.effect: DropShadow {
+        cached: true
+        color: "white"
+        spread: 0.8
     }
 }

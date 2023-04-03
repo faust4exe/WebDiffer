@@ -3,8 +3,16 @@ import QtQuick 2.2
 Rectangle {
     id: root
     color: "transparent"
-    border.color: "red"
+    border.color: "black"
     border.width: 1
+
+    Rectangle {
+        anchors.fill: parent
+        anchors.margins: 1
+        color: "transparent"
+        border.color: "white"
+        border.width: 1
+    }
 
     ScanRectHandle {
         anchors.centerIn: parent
