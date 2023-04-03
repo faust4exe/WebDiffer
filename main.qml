@@ -171,7 +171,7 @@ Item {
         anchors.fill: parent
         anchors.topMargin: navigationBar.height
         anchors.bottomMargin: statusBar.height
-        url: "https://metro.zakaz.md/ru/"
+        url: "https://point.md/"
         onLoadingChanged: function(loadRequest) {
             if (loadRequest.errorString)
                 console.error(loadRequest.errorString);
