@@ -7,11 +7,11 @@
 #include <QScreen>
 #include <QWindow>
 #include <QTime>
-#include <QTimer>
 #include <QDebug>
 #include <QDir>
 
 const QString shotsPath = "shots";
+const int beepInterval = 5;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -24,6 +24,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->quickWidget->engine()->rootContext()->setContextProperty("theWindow", this);
     ui->quickWidget->setSource(QUrl(QStringLiteral("qrc:/main.qml")));
+
+    m_beepTimer.setInterval(beepInterval * 1000);
+    m_compareTimer.setInterval(m_updateInterval * 1000);
+
+    connect(&m_compareTimer, &QTimer::timeout, this, &MainWindow::compareScreenshots);
+    connect(&m_beepTimer, &QTimer::timeout, [](){
+        QApplication::beep();
+    });
+
 }
 
 MainWindow::~MainWindow()
@@ -59,7 +68,19 @@ void MainWindow::on_takeScreenshot_clicked()
 void MainWindow::on_compareScreenshot_clicked()
 {
     on_stopBeeping_clicked();
+    compareScreenshots();
+    m_compareTimer.start();
+    ui->stopCompare->setEnabled(true);
+}
 
+void MainWindow::on_stopCompare_clicked()
+{
+    m_compareTimer.stop();
+    ui->stopCompare->setEnabled(false);
+}
+
+void MainWindow::compareScreenshots()
+{
     QPixmap updatePixmap = ui->quickWidget->grab(scanRect());
 
     QString fileName =
@@ -90,9 +111,9 @@ void MainWindow::on_compareScreenshot_clicked()
         }
 
         if ( diffCount > 15 ) {
-            m_loop_beep = true;
             ui->stopBeeping->setEnabled(true);
-            loopBeep();
+            QApplication::beep();
+            m_beepTimer.start();
 
             bool ok = updatePixmap.save(fileName, "png");
             qDebug() << "Saved update screen to " << fileName
@@ -116,28 +137,12 @@ void MainWindow::on_compareScreenshot_clicked()
         ui->label->setText("Pixmap is are different in size");
     }
 
-    QMetaObject::invokeMethod(ui->quickWidget->rootObject(),
-                              "updatePage");
-
-    QTimer::singleShot(ui->secsToUpdate->value() * 1000,
-                       this, SLOT(on_compareScreenshot_clicked()));
-}
-
-void MainWindow::loopBeep()
-{
-    if ( m_loop_beep == false ) {
-        return;
-    }
-
-    QApplication::beep();
-
-    const int secondToUpdate = 5;
-    QTimer::singleShot(secondToUpdate * 1000, this, SLOT(loopBeep()));
+    QMetaObject::invokeMethod(ui->quickWidget->rootObject(), "updatePage");
 }
 
 void MainWindow::on_stopBeeping_clicked()
 {
-    m_loop_beep = false;
+    m_beepTimer.stop();
     ui->stopBeeping->setEnabled(false);
     setDiffFilename(QUrl());
 }
@@ -177,6 +182,8 @@ void MainWindow::setUpdateInterval(int newUpdateInterval)
         return;
 
     m_updateInterval = newUpdateInterval;
+    m_compareTimer.setInterval(m_updateInterval * 1000);
+
     emit updateIntervalChanged();
 }
 

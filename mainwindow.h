@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QUrl>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,27 +33,27 @@ public:
 
 signals:
     void scanRectChanged();
-
     void updateIntervalChanged();
-
     void diffFilenameChanged();
 
 private slots:
     void on_takeScreenshot_clicked();
     void on_compareScreenshot_clicked();
+    void on_stopCompare_clicked();
     void on_stopBeeping_clicked();
     void on_secsToUpdate_valueChanged();
 
-    void loopBeep();
+    void compareScreenshots();
 
 private:
     Ui::MainWindow *ui;
     QRect m_scanRect;
-    bool m_loop_beep = false;
     int counter = 0;
     QImage originalImage;
     QString originalFilename;
     int m_updateInterval = 300;
     QUrl m_diffFilename;
+    QTimer m_beepTimer;
+    QTimer m_compareTimer;
 };
 #endif // MAINWINDOW_H

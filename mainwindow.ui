@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,1,0">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,1,0">
       <item>
        <widget class="QPushButton" name="takeScreenshot">
         <property name="text">
@@ -31,6 +31,16 @@
         </property>
         <property name="text">
          <string>Start comparing w screenshot</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="stopCompare">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Stop comparing</string>
         </property>
        </widget>
       </item>
